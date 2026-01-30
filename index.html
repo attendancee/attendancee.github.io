@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Updated Title as requested -->
     <title>Attendance | Management System</title>
+    <!-- Include the Supabase JS client library from CDN -->
+    <script src="https://cdn.jsdelivr.net"></script>
     <style>
         /* Base Styles and Layout (Modern Dashboard Look) */
         :root {
@@ -27,7 +30,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
             border-radius: 16px; 
             margin: 20px;
-            position: relative; /* Needed for absolute positioning of skeleton overlay */
+            position: relative;
         }
 
         .form-title { font-size: 1rem; margin-bottom: 25px; color: var(--text-muted); line-height: 1.4; }
@@ -36,13 +39,7 @@
         label sup { color: red; margin-left: 3px; }
 
         input, select { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 0.9rem; 
-            background: #fafafa;
+            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 0.9rem; background: #fafafa;
         }
         input:focus, select:focus { outline: none; border-color: var(--primary); background: #fff; }
         input::placeholder { color: #aaa; font-style: italic; }
@@ -56,74 +53,23 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .full-width { grid-column: span 2; }
 
-        button { background: var(--primary); color: white; border: none; padding: 14px 30px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; width: 100%; }
+        button { background: var(--primary); color: white; border: none; padding: 14px 30px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; width: 100%; transition: background-color 0.3s; }
+        button:disabled { background: #cccccc; cursor: not-allowed; }
 
-        /* Skeleton Loader Styles */
-        .skeleton { animation: pulse 1.5s infinite ease-in-out; background-color: #e0e0e0; border-radius: 4px; }
-        /* Hide real content when loading class is active */
+        /* Skeleton Loader Styles (Simplified for clarity) */
         .form-container.loading #form-content { visibility: hidden; }
-
-        /* Define specific skeleton blocks in CSS for the loading state */
-        .skeleton-title-bar { height: 25px; width: 90%; margin-bottom: 35px; }
-        .skeleton-label { height: 16px; width: 40%; margin-bottom: 10px; }
-        .skeleton-input-box { height: 44px; width: 100%; margin-bottom: 25px; }
-        .skeleton-radio-line { height: 20px; width: 50%; margin-bottom: 25px; }
-        .skeleton-button { height: 48px; width: 100%; margin-top: 20px; }
-
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
 
     </style>
 </head>
 <body>
 
-    <div class="form-container loading" id="form-box">
-
-        <!-- Skeleton Overlay Elements (visible when loading class is active) -->
-        <div class="skeleton skeleton-title-bar"></div>
-        <div class="form-grid">
-            <div class="form-group">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-input-box"></div>
-            </div>
-             <div class="form-group">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-input-box"></div>
-            </div>
-            <div class="form-group full-width">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-input-box"></div>
-            </div>
-            <div class="form-group">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-radio-line"></div>
-            </div>
-             <div class="form-group">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-input-box"></div>
-            </div>
-            <div class="form-group">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-input-box"></div>
-            </div>
-            <div class="form-group">
-                <div class="skeleton skeleton-label"></div>
-                <div class="skeleton skeleton-input-box"></div>
-            </div>
-            <div class="form-group full-width">
-                <div class="skeleton skeleton-button"></div>
-            </div>
-        </div>
-
-        <!-- Actual Form Content (Hidden via CSS visibility when loading) -->
+    <div class="form-container" id="form-box">
         <div id="form-content">
-            <h2 style="color: var(--primary); margin-bottom: 15px;">Attendance System</h2>
-            <p class="form-title">Please fill out all required info</p>
+             <!-- Updated H1 as requested -->
+            <h1 style="color: var(--primary); margin-bottom: 15px;">Attendance System</h1>
+            <p class="form-title">Please fill out all required information below to record attendance.</p>
             
-            <form>
+            <form id="attendanceForm">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="fname">First Name <sup>*</sup></label>
@@ -164,7 +110,7 @@
                     </div>
                     
                     <div class="form-group full-width">
-                        <button type="submit">Submit Registration</button>
+                        <button type="submit" id="submitBtn">Submit</button>
                     </div>
                 </div>
             </form>
@@ -172,29 +118,48 @@
     </div>
 
     <script>
-        // Simulate a network delay (e.g., fetching data from GitHub or API)
-        setTimeout(() => {
-            // Remove the loading class to reveal the actual content
-            document.getElementById('form-box').classList.remove('loading');
-            // Hide the skeleton visual placeholders permanently
-            const skeletons = document.querySelectorAll('.skeleton');
-            skeletons.forEach(s => s.style.display = 'none');
-        }, 1500); // Loads after 1.5 seconds
+        // --- Supabase Configuration ---
+        const SUPABASE_URL = 'https://khxghksiqroedvuyxacn.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_tvoDBXAIpFpIBJQwJEBZ1Q_LPHrQocp';
+        
+        // Initialize the Supabase client
+        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ------------------------------
 
-        // Add dummy submit handler to show the fields are functional
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.getElementById('attendanceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const data = {
-                fname: document.getElementById('fname').value,
-                lname: document.getElementById('lname').value,
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = {
+                first_name: document.getElementById('fname').value, // Matches the requested JS properties
+                last_name: document.getElementById('lname').value,
                 email: document.getElementById('email').value,
                 gender: document.querySelector('input[name="gender"]:checked').value,
-                age: document.getElementById('age').value,
+                age: document.getElementById('age').value || null, // Handle optional age field
                 phone: document.getElementById('phone').value,
-                id_nbr: document.getElementById('id_nbr').value
+                id_number: document.getElementById('id_nbr').value,
+                // Supabase automatically adds 'created_at' if you configure it in your table settings
             };
-            alert('Form Submitted Successfully!\nCheck console for data object.');
-            console.log(data);
+
+            // !!! CRITICAL: Replace 'your_personnel_table' with the actual name of your table in Supabase !!!
+            const { data, error } = await supabase
+                .from('your_personnel_table') 
+                .insert([formData]);
+
+            if (error) {
+                console.error('Error inserting data:', error);
+                alert('An error occurred: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Registration';
+            } else {
+                alert('Attended Successfully.');
+                document.getElementById('attendanceForm').reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Registration';
+                console.log('Data successfully inserted:', data);
+            }
         });
     </script>
 </body>
