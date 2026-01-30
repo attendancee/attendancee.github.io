@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance | Management System</title>
+    <style>
+        /* Base Styles and Layout (Modern Dashboard Look) */
+        :root {
+            --primary: #4361ee;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #2b2d42;
+            --text-muted: #6c757d;
+            --border: #e0e6ed;
+            --success: #2ec4b6;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: flex-start; padding-top: 50px; }
+
+        .form-container { 
+            width: 100%; 
+            max-width: 700px; 
+            background-color: white; 
+            padding: 30px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            border-radius: 16px; 
+            margin: 20px;
+            position: relative; /* Needed for absolute positioning of skeleton overlay */
+        }
+
+        .form-title { font-size: 1rem; margin-bottom: 25px; color: var(--text-muted); line-height: 1.4; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        label sup { color: red; margin-left: 3px; }
+
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 0.9rem; 
+            background: #fafafa;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--primary); background: #fff; }
+        input::placeholder { color: #aaa; font-style: italic; }
+
+        /* Gender Radio Buttons Styling */
+        .radio-group { display: flex; gap: 20px; margin-top: 5px; }
+        .radio-group label { font-weight: normal; display: flex; align-items: center; margin-bottom: 0; color: var(--text-main); }
+        .radio-group input { margin-right: 8px; width: auto; }
+
+        /* Grid Layout for a management look */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+
+        button { background: var(--primary); color: white; border: none; padding: 14px 30px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; width: 100%; }
+
+        /* Skeleton Loader Styles */
+        .skeleton { animation: pulse 1.5s infinite ease-in-out; background-color: #e0e0e0; border-radius: 4px; }
+        /* Hide real content when loading class is active */
+        .form-container.loading #form-content { visibility: hidden; }
+
+        /* Define specific skeleton blocks in CSS for the loading state */
+        .skeleton-title-bar { height: 25px; width: 90%; margin-bottom: 35px; }
+        .skeleton-label { height: 16px; width: 40%; margin-bottom: 10px; }
+        .skeleton-input-box { height: 44px; width: 100%; margin-bottom: 25px; }
+        .skeleton-radio-line { height: 20px; width: 50%; margin-bottom: 25px; }
+        .skeleton-button { height: 48px; width: 100%; margin-top: 20px; }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="form-container loading" id="form-box">
+
+        <!-- Skeleton Overlay Elements (visible when loading class is active) -->
+        <div class="skeleton skeleton-title-bar"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-input-box"></div>
+            </div>
+             <div class="form-group">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-input-box"></div>
+            </div>
+            <div class="form-group full-width">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-input-box"></div>
+            </div>
+            <div class="form-group">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-radio-line"></div>
+            </div>
+             <div class="form-group">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-input-box"></div>
+            </div>
+            <div class="form-group">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-input-box"></div>
+            </div>
+            <div class="form-group">
+                <div class="skeleton skeleton-label"></div>
+                <div class="skeleton skeleton-input-box"></div>
+            </div>
+            <div class="form-group full-width">
+                <div class="skeleton skeleton-button"></div>
+            </div>
+        </div>
+
+        <!-- Actual Form Content (Hidden via CSS visibility when loading) -->
+        <div id="form-content">
+            <h2 style="color: var(--primary); margin-bottom: 15px;">Attendance System</h2>
+            <p class="form-title">Please fill out all required info</p>
+            
+            <form>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fname">First Name <sup>*</sup></label>
+                        <input type="text" id="fname" placeholder="Enter first name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lname">Last Name <sup>*</sup></label>
+                        <input type="text" id="lname" placeholder="Enter last name" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email">Email Address <sup>*</sup></label>
+                        <input type="email" id="email" placeholder="Enter professional email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Gender <sup>*</sup></label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="gender" value="male" required> Male</label>
+                            <label><input type="radio" name="gender" value="female"> Female</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" placeholder="e.g., 30" min="18">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number <sup>*</sup></label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 000-0000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_nbr">ID Number <sup>*</sup></label>
+                        <input type="text" id="id_nbr" placeholder="Enter national ID number" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <button type="submit">Submit Registration</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Simulate a network delay (e.g., fetching data from GitHub or API)
+        setTimeout(() => {
+            // Remove the loading class to reveal the actual content
+            document.getElementById('form-box').classList.remove('loading');
+            // Hide the skeleton visual placeholders permanently
+            const skeletons = document.querySelectorAll('.skeleton');
+            skeletons.forEach(s => s.style.display = 'none');
+        }, 1500); // Loads after 1.5 seconds
+
+        // Add dummy submit handler to show the fields are functional
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                fname: document.getElementById('fname').value,
+                lname: document.getElementById('lname').value,
+                email: document.getElementById('email').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                age: document.getElementById('age').value,
+                phone: document.getElementById('phone').value,
+                id_nbr: document.getElementById('id_nbr').value
+            };
+            alert('Form Submitted Successfully!\nCheck console for data object.');
+            console.log(data);
+        });
+    </script>
+</body>
+</html>
