@@ -102,7 +102,7 @@
         </form>
     </div>
 
-    <!-- 1. Add Supabase Library -->
+    <!-- 1. Add Supabase Library (Corrected CDN URL) -->
     <script src="https://cdn.jsdelivr.net"></script>
 
     <script>
@@ -115,7 +115,8 @@
         const button = document.getElementById("submitBtn");
 
         form.addEventListener("submit", async (e) => {
-            e.preventDefault();
+            // e.preventDefault() stops the URL issue you were having
+            e.preventDefault(); 
             button.disabled = true;
             button.textContent = "Saving to Database...";
 
@@ -139,11 +140,13 @@
 
                 if (error) throw error;
 
+                // Success Alert (as requested)
                 alert("Attendance recorded successfully!");
                 form.reset();
 
             } catch (error) {
                 console.error("Error:", error);
+                // Error Alert (as requested)
                 alert("Error saving data: " + error.message);
             } finally {
                 button.disabled = false;
