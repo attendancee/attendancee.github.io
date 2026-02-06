@@ -140,13 +140,13 @@
 
                 if (error) throw error;
 
-                // Success Alert (as requested)
+                // Success Alert 
                 alert("Attendance recorded successfully!");
                 form.reset();
 
             } catch (error) {
                 console.error("Error:", error);
-                // Error Alert (as requested)
+                // Error Alert 
                 alert("Error saving data: " + error.message);
             } finally {
                 button.disabled = false;
