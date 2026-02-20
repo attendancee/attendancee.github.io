@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +15,7 @@
             --text-main: #f0f6fc;
             --text-dim: #8b949e;
             --danger: #ff4d4d;
+            --overlay: rgba(11, 14, 20, 0.85);
         }
 
         body { 
@@ -25,16 +24,17 @@
             color: var(--text-main); 
             margin: 0; 
             padding-top: 70px;
+            scroll-behavior: smooth;
         }
 
-        /* Modern Navigation */
+        /* --- Navigation --- */
         nav {
             padding: 0 50px;
             height: 70px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(11, 14, 20, 0.9);
+            background: rgba(11, 14, 20, 0.95);
             backdrop-filter: blur(15px);
             position: fixed;
             width: 100%;
@@ -46,100 +46,106 @@
 
         .nav-links { display: flex; gap: 30px; }
         .nav-links a { color: var(--text-dim); text-decoration: none; font-weight: 500; transition: 0.3s; font-size: 14px; }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; cursor: pointer; }
 
-        .logo { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-
-        /* Professional Profile Area */
+        /* --- User UI --- */
         .profile-trigger {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            padding: 5px 15px;
-            border-radius: 50px;
-            border: 1px solid #30363d;
-            background: #1c2128;
-            transition: 0.3s;
+            display: none; align-items: center; gap: 12px; cursor: pointer;
+            padding: 5px 15px; border-radius: 50px; border: 1px solid #30363d;
+            background: #1c2128; transition: 0.3s;
         }
         .profile-trigger:hover { border-color: var(--primary); background: #21262d; }
         .user-avatar { 
-            width: 35px; height: 35px; 
-            border-radius: 50%; 
+            width: 32px; height: 32px; border-radius: 50%; 
             background: linear-gradient(45deg, var(--primary), #2eb875);
             display: flex; align-items: center; justify-content: center;
-            color: #000; font-weight: 800;
+            color: #000; font-weight: 800; font-size: 14px;
         }
 
-        /* Hero & Body */
+        /* --- Hero Section --- */
         .hero {
-            padding: 80px 20px;
+            position: relative;
+            padding: 100px 20px;
             text-align: center;
-            background: radial-gradient(circle at top right, rgba(62, 207, 142, 0.1), transparent);
+            background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2070') center/cover;
+            overflow: hidden;
         }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, var(--overlay), var(--bg));
+        }
+        .hero-content { position: relative; z-index: 1; }
 
-        .section-title { font-size: 2.5rem; margin-bottom: 40px; text-align: center; }
-        
+        /* --- Search Bar --- */
+        .search-container {
+            max-width: 600px; margin: 30px auto; display: flex; gap: 10px;
+        }
+        .search-input {
+            flex: 1; background: #0d1117; border: 1px solid #30363d;
+            padding: 15px; border-radius: 12px; color: white; outline: none;
+        }
+        .search-input:focus { border-color: var(--primary); }
+
+        /* --- Content Layout --- */
+        .player-container {
+            max-width: 1000px; margin: -50px auto 50px; padding: 25px;
+            background: var(--card-bg); border-radius: 24px; border: 1px solid #30363d;
+            position: relative; z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+            border-radius: 15px; background: #000;
+        }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* --- Themed Grid --- */
         .ai-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            padding: 50px;
-            max-width: 1200px;
-            margin: auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px; padding: 50px; max-width: 1200px; margin: auto;
         }
-
         .ai-card {
-            background: var(--card-bg);
-            border: 1px solid #30363d;
-            padding: 30px;
-            border-radius: 15px;
-            transition: 0.3s;
+            background: var(--card-bg); border: 1px solid #30363d;
+            border-radius: 20px; transition: 0.3s; overflow: hidden;
         }
-        .ai-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .ai-card i { font-size: 30px; color: var(--primary); margin-bottom: 20px; }
-        .ai-card h3 { margin-top: 0; }
-        .ai-card p { color: var(--text-dim); line-height: 1.6; }
+        .card-img {
+            height: 180px; width: 100%; object-fit: cover;
+            border-bottom: 1px solid #30363d;
+        }
+        .card-content { padding: 25px; }
+        .ai-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .ai-card i { font-size: 24px; color: var(--primary); margin-bottom: 15px; }
 
-        /* Overlays */
+        /* --- Auth & Settings Overlays --- */
         #auth-overlay, #settings-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: flex; justify-content: center; 
+            background: rgba(0,0,0,0.96); display: flex; justify-content: center; 
             align-items: center; z-index: 2000;
         }
-
         .auth-card {
-            background: var(--card-bg); padding: 40px; border-radius: 20px;
-            width: 100%; max-width: 400px; border: 1px solid #30363d;
-        }
-
-        input, select {
-            width: 100%; padding: 12px; margin: 10px 0;
-            background: #0d1117; border: 1px solid #30363d;
-            color: white; border-radius: 8px; box-sizing: border-box;
+            background: var(--card-bg); padding: 40px; border-radius: 24px;
+            width: 100%; max-width: 420px; border: 1px solid #30363d;
         }
 
         .btn {
-            width: 100%; padding: 14px; border-radius: 8px;
+            width: 100%; padding: 14px; border-radius: 10px;
             border: none; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
         .btn-primary { background: var(--primary); color: #000; }
-        .btn-outline { background: transparent; border: 1px solid #30363d; color: var(--text-main); }
         .btn-danger { background: var(--danger); color: white; }
 
         .hidden { display: none !important; }
-        .blur { filter: blur(10px); pointer-events: none; }
+        .blur { filter: blur(20px); pointer-events: none; }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo"><i class="fas fa-brain"></i> CourseBag</div>
+    <div class="logo"><i class="fas fa-microchip"></i> CourseBag</div>
     <div class="nav-links">
-        <a href="#">Home</a>
-        <a href="https://towardsdatascience.com" target="_blank">AI Trends</a>
-        <a href="https://huggingface.co" target="_blank">Models</a>
-        <a href="https://web.dev" target="_blank">Web3 API</a>
+        <a href="#" class="active">Learning Hub</a>
+        <a href="https://github.com" target="_blank">Repos</a>
+        <a href="https://huggingface.co" target="_blank">AI Models</a>
     </div>
     <div id="profile-area">
         <div class="profile-trigger" id="profile-btn" onclick="toggleSettings()">
@@ -151,140 +157,159 @@
 
 <div id="main-content" class="blur">
     <section class="hero">
-        <h1>Artificial Intelligence & Robotics</h1>
-        <p>Merging the world of Neural Networks with Embedded Engineering.</p>
+        <div class="hero-content">
+            <h1 style="font-size: 3rem; margin:0;">Future Tech Academy</h1>
+            <p style="color: var(--text-dim); font-size: 1.2rem;">Search Tutorials & Scale Your Engineering Skills</p>
+            
+            <div class="search-container">
+                <input type="text" id="yt-search" class="search-input" placeholder="Search Python, ROS2, ESP32 tutorials...">
+                <button class="btn btn-primary" style="width: auto; padding: 0 25px;" onclick="searchTutorials()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
     </section>
 
-    <h2 class="section-title">AI in the Real World</h2>
-    <div class="ai-grid">
-        <div class="ai-card">
-            <i class="fas fa-robot"></i>
-            <h3>Reinforcement Learning</h3>
-            <p>Moving beyond static code, RL allows robots to learn from trial and error in physical environments—essential for autonomous drones and manufacturing arms.</p>
+    <div class="player-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h3 id="video-title" style="margin:0">Engineering Stream</h3>
+                <span id="current-track-tag" style="color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: 1px;">CONNECTED</span>
+            </div>
+            <div id="tech-pulse" style="font-family: monospace; color: var(--primary); font-size: 13px;">
+                <i class="fas fa-sync fa-spin"></i> API ACTIVE
+            </div>
         </div>
-        <div class="ai-card">
-            <i class="fas fa-network-wired"></i>
-            <h3>Generative AI & LLMs</h3>
-            <p>Utilizing Web APIs like OpenAI and Anthropic to build intelligent coding assistants and hardware debugging tools that understand schematics.</p>
+        <div class="video-wrapper">
+            <iframe id="course-video" src="" allowfullscreen></iframe>
         </div>
-        <div class="ai-card">
-            <i class="fas fa-microchip"></i>
-            <h3>Edge AI</h3>
-            <p>Deploying ML models directly on STM32 or ESP32 microcontrollers using TensorFlow Lite for ultra-low latency gesture recognition and voice control.</p>
-        </div>
+        <p id="video-desc" style="color: var(--text-dim); margin-top: 20px; line-height: 1.6;"></p>
     </div>
 
-    <div style="background: #111; padding: 50px; text-align: center;">
-        <h3>Live Market Intelligence</h3>
-        <p id="api-status">Connecting to Tech APIs...</p>
-        <div id="tech-data" style="font-family: monospace; color: var(--primary);"></div>
+    <div class="ai-grid">
+        <div class="ai-card">
+            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=1000" class="card-img" alt="Robotics">
+            <div class="card-content">
+                <i class="fas fa-robot"></i>
+                <h3>Autonomous Systems</h3>
+                <p>Deploying SLAM and LIDAR processing on mobile robotics platforms.</p>
+            </div>
+        </div>
+        <div class="ai-card">
+            <img src="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=1000" class="card-img" alt="PCB">
+            <div class="card-content">
+                <i class="fas fa-microchip"></i>
+                <h3>Embedded Engineering</h3>
+                <p>Advanced PCB design and firmware optimization for ESP32 and ARM Cortex.</p>
+            </div>
+        </div>
+        <div class="ai-card">
+            <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000" class="card-img" alt="AI">
+            <div class="card-content">
+                <i class="fas fa-brain"></i>
+                <h3>Neural Architectures</h3>
+                <p>Building transformer models and training deep RL agents for hardware.</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <div id="auth-overlay">
     <div class="auth-card">
-        <h2 id="auth-title" style="text-align:center">Start Your Journey</h2>
+        <h2 id="auth-title" style="text-align:center">Engineering Portal</h2>
         <div id="reg-fields">
             <input type="text" id="fname" placeholder="First Name">
             <input type="text" id="lname" placeholder="Last Name">
             <select id="track">
-                <option value="AI Expert">Focus: AI & ML</option>
-                <option value="IoT Expert">Focus: IoT Architecture</option>
-                <option value="Robot Expert">Focus: Robotics</option>
+                <option value="AI Expert">Trade: AI & ML Expert</option>
+                <option value="IoT Expert">Trade: IoT Architect</option>
+                <option value="Robot Expert">Trade: Robotics Engineer</option>
             </select>
         </div>
         <input type="email" id="email" placeholder="Email Address">
         <input type="password" id="password" placeholder="Password">
-        <button id="submitBtn" class="btn btn-primary" onclick="handleAuth()">Join CourseBag</button>
-        <p id="toggle-msg" style="text-align:center; font-size: 14px;">
-            Already a member? <button onclick="toggleMode()" style="background:none; border:none; color:var(--primary); cursor:pointer;">Login</button>
+        <button id="submitBtn" class="btn btn-primary" onclick="handleAuth()">Access Dashboard</button>
+        <p style="text-align:center; font-size: 14px; color: var(--text-dim);">
+            Switch Mode? <button onclick="toggleMode()" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600;">Click Here</button>
         </p>
-        <div id="status" style="text-align:center; margin-top:10px;"></div>
+        <div id="status" style="text-align:center; margin-top:10px; font-size: 12px; color: var(--danger);"></div>
     </div>
 </div>
 
 <div id="settings-overlay" class="hidden">
-    <div class="auth-card" style="max-width: 450px;">
+    <div class="auth-card">
         <div style="text-align: center; margin-bottom: 25px;">
             <div class="user-avatar" id="settings-initial" style="width:60px; height:60px; margin: 0 auto 10px; font-size: 24px;">?</div>
-            <h3 id="settings-name" style="margin:0;">Student Name</h3>
+            <h3 id="settings-name" style="margin:0;">Engineer</h3>
             <p id="settings-email" style="color:var(--text-dim); font-size:14px;"></p>
         </div>
-        
-        <hr style="border:0; border-top: 1px solid #30363d; margin: 20px 0;">
-        
-        <h4>Security & Access</h4>
-        <button class="btn btn-outline" onclick="changePassword()" style="margin-bottom:10px;">
-            <i class="fas fa-key"></i> Update Password
-        </button>
-        <button class="btn btn-danger" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
-        <button class="btn" onclick="toggleSettings()" style="background:none; color:var(--text-dim); margin-top:10px;">Close Dashboard</button>
+        <button class="btn btn-primary" style="margin-bottom:10px;" onclick="changePassword()"><i class="fas fa-lock"></i> Update Credentials</button>
+        <button class="btn btn-danger" onclick="logout()"><i class="fas fa-power-off"></i> Sign Out</button>
+        <button class="btn" onclick="toggleSettings()" style="background:none; color:var(--text-dim); margin-top:10px;">Return to Hub</button>
     </div>
 </div>
 
 <script>
+    // --- API KEYS ---
+    const YT_API_KEY = 'AIZaSyBAlzJRUC-q3JhBqn-MfGd-I8thu07X7xU';
     const supabaseUrl = 'https://mkkfwraukjmqeqmvgdva.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ra2Z3cmF1a2ptcWVxbXZnZHZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzOTAwNDMsImV4cCI6MjA4NTk2NjA0M30.KZ9JnF4p6VazX0dsKRPJA6JAIobaFjEY3o8W9NK_BBY';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     let isLogin = false;
 
-    // --- 1. PRO PROFILE UI ---
+    // --- YouTube Search Function ---
+    async function searchTutorials() {
+        const query = document.getElementById('yt-search').value;
+        if (!query) return;
+
+        try {
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${query}+tutorial&type=video&key=${YT_API_KEY}`);
+            const data = await response.json();
+            
+            if (data.items && data.items.length > 0) {
+                const video = data.items[0];
+                document.getElementById('course-video').src = `https://www.youtube.com/embed/${video.id.videoId}`;
+                document.getElementById('video-title').innerText = video.snippet.title;
+                document.getElementById('video-desc').innerText = video.snippet.description;
+            }
+        } catch (e) {
+            console.error("YouTube API Error", e);
+        }
+    }
+
+    const courseContent = {
+        "AI Expert": { title: "AI Research Path", video: "https://www.youtube.com/embed/aircAruvnKk", desc: "Focusing on Reasoning Models and Neural Architectures." },
+        "IoT Expert": { title: "IoT Systems Path", video: "https://www.youtube.com/embed/h0e2HAPTGF4", desc: "Edge computing, ESP32, and secure MQTT communications." },
+        "Robot Expert": { title: "Robotics Engineering", video: "https://www.youtube.com/embed/j9Y7yC7S60A", desc: "Advanced ROS2 kinematics and autonomous mapping." }
+    };
+
     async function fetchProfile(uid, email) {
-        const { data } = await _supabase.from('attendance').select('first_name, last_name, gender').eq('id', uid).single();
+        const { data } = await _supabase.from('attendance').select('*').eq('id', uid).single();
         if (data) {
             document.getElementById('auth-overlay').classList.add('hidden');
             document.getElementById('main-content').classList.remove('blur');
-            
-            // Update Profile Bar
             document.getElementById('profile-btn').style.display = 'flex';
             document.getElementById('user-name').innerText = data.first_name;
             document.getElementById('user-initial').innerText = data.first_name[0].toUpperCase();
             
-            // Update Settings Modal
             document.getElementById('settings-name').innerText = `${data.first_name} ${data.last_name}`;
-            document.getElementById('settings-initial').innerText = data.first_name[0].toUpperCase();
             document.getElementById('settings-email').innerText = email;
-            
-            fetchTechAPI(); // Start fetching cool data
+
+            const track = data.gender;
+            const content = courseContent[track] || courseContent["AI Expert"];
+            document.getElementById('current-track-tag').innerText = track.toUpperCase();
+            document.getElementById('video-title').innerText = content.title;
+            document.getElementById('course-video').src = content.video;
+            document.getElementById('video-desc').innerText = content.desc;
         }
     }
 
-    // --- 2. PASSWORD CHANGE ---
-    async function changePassword() {
-        const newPass = prompt("Enter your new secure password:");
-        if (newPass && newPass.length >= 6) {
-            const { error } = await _supabase.auth.updateUser({ password: newPass });
-            if (error) alert("Error: " + error.message);
-            else alert("Password updated successfully!");
-        } else {
-            alert("Password must be at least 6 characters.");
-        }
-    }
-
-    // --- 3. FETCH LIVE API DATA ---
-    async function fetchTechAPI() {
-        const statusEl = document.getElementById('api-status');
-        const dataEl = document.getElementById('tech-data');
-        try {
-            // Fetching a tech news/data point (using a public crypto tech index for demo)
-            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum,solana&vs_currencies=usd');
-            const data = await response.json();
-            statusEl.innerText = "System Health: Optimal | Real-time Tech Index Active";
-            dataEl.innerText = `ETH: $${data.ethereum.usd} | SOL: $${data.solana.usd} | AI Computational Cost: Nominal`;
-        } catch (e) {
-            statusEl.innerText = "API Offline. Local cached data in use.";
-        }
-    }
-
-    // --- 4. AUTH LOGIC ---
     function toggleMode() {
         isLogin = !isLogin;
-        document.getElementById('auth-title').innerText = isLogin ? "Welcome Back" : "Start Your Journey";
+        document.getElementById('auth-title').innerText = isLogin ? "Welcome Back" : "Engineering Portal";
         document.getElementById('reg-fields').classList.toggle('hidden');
-        document.getElementById('submitBtn').innerText = isLogin ? "Login to Portal" : "Join CourseBag";
+        document.getElementById('submitBtn').innerText = isLogin ? "Login" : "Create Account";
     }
 
     async function handleAuth() {
@@ -292,8 +317,6 @@
         const password = document.getElementById('password').value;
         const status = document.getElementById('status');
         
-        if (!email || !password) return status.innerText = "Check your fields!";
-
         if (isLogin) {
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
             if (error) status.innerText = error.message;
@@ -302,18 +325,22 @@
             const { data, error } = await _supabase.auth.signUp({
                 email, password,
                 options: { data: { 
-                    first_name: document.getElementById('fname').value,
-                    last_name: document.getElementById('lname').value,
-                    track: document.getElementById('track').value
+                    first_name: document.getElementById('fname').value, 
+                    last_name: document.getElementById('lname').value, 
+                    track: document.getElementById('track').value 
                 }}
             });
             if (error) status.innerText = error.message;
-            else { status.innerText = "Account Created! Toggle Login."; toggleMode(); }
+            else { status.innerText = "Success! Please Login."; toggleMode(); }
         }
     }
 
     function toggleSettings() { document.getElementById('settings-overlay').classList.toggle('hidden'); }
     async function logout() { await _supabase.auth.signOut(); location.reload(); }
+    async function changePassword() {
+        const newPass = prompt("Enter new password:");
+        if (newPass) await _supabase.auth.updateUser({ password: newPass });
+    }
 </script>
 </body>
 </html>
